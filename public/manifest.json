@@ -1,0 +1,13 @@
+{
+  "short_name": "Wedding",
+  "name": "Wedding Photo Uploader",
+  "icons": [
+    { "src": "/icons/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icons/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ],
+  "start_url": "/",
+  "background_color": "#fff8f9",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#f4a7b9"
+}

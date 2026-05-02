@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  @apply bg-white text-gray-900 antialiased;
+}
+
+.soft-bg {
+  background: linear-gradient(180deg, #fff8f9 0%, #fff 100%);
+}
+
+/* Brand */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+:root {
+  --color-primary: #602a80;
+  --color-primary-600: #4b1f61;
+}
+
+.bg-primary { background-color: var(--color-primary); }
+.text-primary { color: var(--color-primary); }
+
+.card { border-radius: 1rem; box-shadow: 0 6px 24px rgba(96,42,128,0.08); }
+
+h1, h2, h3, .great-vibes-heading {
+  font-family: 'Great Vibes', cursive;
+}
