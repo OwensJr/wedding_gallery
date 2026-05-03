@@ -5,30 +5,44 @@ export const runtime = 'nodejs'
 export async function GET(req) {
   try {
     const url = new URL(req.url)
-    const eventId = url.searchParams.get('eventId') || ''
-    if (!eventId) return new Response(JSON.stringify({ valid: false }), { status: 200 })
+    const eventId = url.searchParams.get('eventId')
 
-    try {
-      const { data, error } = await supabaseAdmin.from('events').select('id').eq('id', eventId).limit(1)
-      if (!error && Array.isArray(data) && data.length > 0) return new Response(JSON.stringify({ valid: true }), { status: 200 })
-    } catch (e) {
-      console.warn('events table check failed, falling back to env var')
+    if (!eventId) {
+      return Response.json({ valid: false })
     }
 
-    const env = process.env.ALLOWED_EVENTS || process.env.NEXT_PUBLIC_ALLOWED_EVENTS
-    if (env) {
-      const allowed = env.split(',').map((s) => s.trim()).filter(Boolean)
-      return new Response(JSON.stringify({ valid: allowed.includes(eventId) }), { status: 200 })
+    // 1. Try Supabase first
+    const { data, error } = await supabaseAdmin
+      .from('events')
+      .select('id')
+      .eq('id', eventId)
+      .maybeSingle()
+
+    if (error) {
+      console.error('Supabase error:', error)
     }
 
-    // Development convenience: allow demo-event and 'upload' locally
-    if (process.env.NODE_ENV !== 'production' && (eventId === 'demo-event' || eventId === 'upload')) {
-      return new Response(JSON.stringify({ valid: true }), { status: 200 })
+    if (data) {
+      return Response.json({ valid: true })
     }
 
-    return new Response(JSON.stringify({ valid: false }), { status: 200 })
+    // 2. Fallback to env
+    const allowedRaw = process.env.ALLOWED_EVENTS || ''
+    const allowed = allowedRaw
+      .split(',')
+      .map(e => e.trim())
+      .filter(Boolean)
+
+    return Response.json({
+      valid: allowed.includes(eventId),
+      debug: {
+        eventId,
+        allowed
+      }
+    })
+
   } catch (err) {
-    console.error(err)
-    return new Response(JSON.stringify({ valid: false }), { status: 500 })
+    console.error('Fatal error:', err)
+    return Response.json({ valid: false }, { status: 500 })
   }
 }
