@@ -282,7 +282,7 @@ export default function EventClient({ eventId }) {
   return (
     <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-xl bg-white card p-4 sm:p-6">
-        <h2 className="text-3xl font-semibold mb-1 great-vibes-heading text-primary">{eventId === 'upload' ? "Veldis & Nula" : eventId}</h2>
+        <h2 className="text-3xl font-semibold mb-1 great-vibes-heading text-primary">{(eventId === 'demo-event' || eventId === 'upload') ? 'Veldis and Nula Gallery' : eventId.replace(/-/g, ' ')}</h2>
         <p className="text-gray-600 mb-3">Share photos or videos with the couple.</p>
 
         <div ref={dropRef} className="border-2 border-dashed border-gray-200 rounded-2xl p-3 sm:p-4">
